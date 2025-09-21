@@ -1,0 +1,38 @@
+{
+  "name": "encore-ts-starter",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Encore Typescript Starter",
+  "license": "MPL-2.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "dev": "encore run"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.7",
+    "@types/nodemailer": "^6.4.17",
+    "openapi-typescript": "^7.6.1",
+    "typescript": "^5.2.2",
+    "vitest": "^1.5.0"
+  },
+  "dependencies": {
+    "@directus/sdk": "^19.1.0",
+    "@dotenvx/dotenvx": "^1.42.2",
+    "@pdf-lib/fontkit": "^1.1.1",
+    "croner": "^9.0.0",
+    "date-fns": "^4.1.0",
+    "encore.dev": "^1.46.20",
+    "grammy": "^1.36.1",
+    "nodemailer": "^7.0.3",
+    "pdf-lib": "^1.17.1"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.13.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
