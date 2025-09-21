@@ -1,0 +1,94 @@
+services:
+  cache:
+    container_name: redis
+    image: redis:7
+    networks:
+      - monitorai-network
+    env_file: .tg.env
+    restart: unless-stopped
+
+  monitorai-sys:
+    container_name: monitorai-sys
+    image: ghcr.io/directus/directus:11.8.0
+    # ports:
+    #   - 8055:8055
+    volumes:
+      - ./uploads:/directus/uploads
+      # If you want to load extensions from the host
+      - ./extensions:/directus/extensions
+      - ./templates:/directus/templates
+    depends_on:
+      - cache
+      - nginx-proxy
+    env_file:
+      - .directus.env
+    networks:
+      - monitorai-network
+    restart: unless-stopped
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - html:/usr/share/nginx/html
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+    networks:
+      - monitorai-network
+    restart: always
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    environment:
+      - DEFAULT_EMAIL=bot@monitorai.ru
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - monitorai-network
+    restart: always
+
+  telegram-auth:
+    image: telegram-auth:1.0.0
+    container_name: telegram-auth
+    networks:
+      - monitorai-network
+    depends_on:
+      - monitorai-sys
+    env_file: .tg.env
+    restart: unless-stopped
+
+  monitorai-services:
+    image: monitorai-services:1.0.0
+    container_name: monitorai-services
+    networks:
+      - monitorai-network
+    depends_on:
+      - monitorai-sys
+    env_file: .services.env
+    restart: unless-stopped
+
+  monitorai-web:
+    image: monitorai-web:1.0.0
+    container_name: monitorai-web
+    networks:
+      - monitorai-network
+    env_file: .web.env
+    restart: unless-stopped
+
+volumes:
+  html:
+  certs:
+  acme:
+
+networks:
+  monitorai-network:
+    name: monitorai-network
