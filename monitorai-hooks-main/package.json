@@ -1,0 +1,47 @@
+{
+  "name": "monitorai-hooks",
+  "description": "Хуки MonitorAI",
+  "icon": "extension",
+  "version": "1.0.34",
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-extension-hook"
+  ],
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "directus:extension": {
+    "type": "hook",
+    "path": "dist/index.js",
+    "source": "src/index.ts",
+    "host": "^10.10.0"
+  },
+  "scripts": {
+    "build": "directus-extension build",
+    "dev": "directus-extension build -w --no-minify",
+    "link": "directus-extension link",
+    "validate": "directus-extension validate"
+  },
+  "devDependencies": {
+    "@directus/extensions": "^3.0.5",
+    "@directus/extensions-sdk": "13.0.4",
+    "@directus/types": "^13.1.1",
+    "@types/node": "^22.15.3",
+    "@types/nodemailer": "^6.4.17",
+    "typescript": "^5.8.3"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild",
+      "vue-demi"
+    ]
+  },
+  "dependencies": {
+    "@directus/constants": "^13.0.1",
+    "@directus/errors": "^2.0.1",
+    "grammy": "^1.36.1",
+    "nodemailer": "^7.0.3"
+  }
+}
